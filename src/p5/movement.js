@@ -14,11 +14,11 @@ let millis = function(){
     return Date.now()
 }
 
-let IK = () =>{    
+let IK = (x,y,z) =>{    
 
-    let X = pos.x,
-        Y = pos.y,
-        Z = pos.z,
+    let X = x,
+        Y = y,
+        Z = z,
         L = Math.sqrt(Y*Y+X*X),
         dia = Math.sqrt(Z*Z+L*L);
     const pi = Math.PI
@@ -38,15 +38,19 @@ let setTime = () =>{
     millisOld = millis()/1000
 }
 
-let writePos = () => {
+let writePos = (x, y, z, manual) => {
     //console.log(gTime)
-    pos.x = Math.sin(gTime*Math.PI/2)*20
-    pos.z = Math.sin(gTime*Math.PI)*20
-    pos.y = Math.abs(Math.sin(gTime*Math.PI))*40+25;
-    //console.log(gTime, pos.y)
     
-
+    pos.x = Math.sin(gTime*Math.PI/2)*20
+    pos.z = Math.cos(gTime*Math.PI/2)*20
+    pos.y = 50;
+    //pos.y = Math.abs(Math.sin(gTime*Math.PI/2))*80+25;    
     let angs = IK(pos.x, pos.y, pos.z)
+    
+    if(manual){
+        angs = IK(x,y,z)
+        pos = {x,y,z}
+    }
 
     setTime()
     

@@ -4,6 +4,9 @@ import writePos from './movement.js'
 export default function Sketch(p5) {
     let size;
     let canvas;
+    let xSlider, ySlider, zSlider, button;
+    let manual = false;
+    
     
     let obj;
     let pos = {
@@ -42,6 +45,17 @@ export default function Sketch(p5) {
           width: window.innerWidth,
           height: window.innerHeight
         }
+
+        // create sliders
+      xSlider = p5.createSlider(-50, 50, 1);
+      xSlider.position(20, 20);
+      ySlider = p5.createSlider(-50, 50, 50);
+      ySlider.position(20, 50);
+      zSlider = p5.createSlider(-50, 50, 50);
+      zSlider.position(20, 80);
+      button = p5.createButton('manual/auto');
+      button.position(20,110)
+      button.mousePressed(() => {manual = !manual})
     };
 
     p5.myCustomRedrawAccordingToNewPropsHandler = function (props) {
@@ -62,7 +76,7 @@ export default function Sketch(p5) {
 
       mouseHandle();
 
-      let wpo = writePos()
+      let wpo = writePos(xSlider.value(),ySlider.value(),zSlider.value(),manual)
       ang = {
         alpha: wpo.angs[0],
         beta: wpo.angs[1],
@@ -93,7 +107,7 @@ export default function Sketch(p5) {
       }
       for(let i = 0;i < spheres.length; i++){
         p5.push()       
-        console.log(spheres)
+        //console.log(spheres)
         p5.translate(-spheres[i].y, -spheres[i].z-11, -spheres[i].x)
         p5.fill(255,255,255,(255/spheres.length)*i)
         p5.sphere(i/45, 8);               
@@ -140,8 +154,10 @@ export default function Sketch(p5) {
     
     
     p5.mouseDragged = () => {
-      rot.y -= (p5.mouseX - p5.pmouseX) * 0.01
-      rot.x -= (p5.mouseY - p5.pmouseY) * 0.01
+      if(p5.mouseX > 200 && p5.mouseY > 120){
+        rot.y -= (p5.mouseX - p5.pmouseX) * 0.01
+        rot.x -= (p5.mouseY - p5.pmouseY) * 0.01
+      }
     }
     let mouseHandle = () =>{
       p5.rotateX(rot.x)
